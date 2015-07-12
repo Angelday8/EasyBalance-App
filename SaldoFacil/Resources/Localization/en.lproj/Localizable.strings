@@ -1,0 +1,56 @@
+/*
+ Localizable.strings
+ SaldoFacil
+ 
+ Created by Daniel Bonates on 9/14/13.
+ Copyright (c) 2013 Daniel Bonates. All rights reserved.
+ */
+
+
+"EasyBalance 2" = "EasyBalance 2";
+"Receipt" = "Receipt";
+"Receipts" = "Receipts";
+"Expenses" = "Expenses";
+"Expenses:" = "Expenses:";
+"Balance" = "Balance";
+"Report" = "Report";
+"Expense" = "Expense";
+"by Daniel Bonates" = "by Daniel Bonates";
+"credits" = "credits";
+"Confirm" = "Confirm";
+"Cancel" = "Cancel";
+"account name" = "account name";
+"New entry" = "New entry";
+"label" = "label";
+"Delete this account?" = "Delete this account?";
+"All data will be removed. Maybe you wanna send it by email or print before doing this, as a backup for future reference." = "All data will be removed. Maybe you wanna send it by email or print before doing this, as a backup for future reference.";
+
+"Delete" = "Delete";
+"Add an account" = "Add an account";
+"Add an entry" = "Add an entry";
+"Print" = "Print";
+"Send" = "Send";
+"Share" = "Share";
+"About" = "About";
+"Options" = "Options";
+"Accounts" = "Accounts";
+"Default account" = "Default account";
+"EasyBalance 2-Report-%@" = "EasyBalance 2-Report-%@";
+"Printing" = "Printing";
+"It was not possible to print: %@" = "It was not possible to print: %@";
+"Printed with success." = "Printed with success.";
+"Sending email" = "Sending email";
+"Draft saved." = "Draft saved.";
+"Message sent." = "Message sent.";
+"Error sending message." = "Error sending message.";
+"Message not sent." = "Message not sent.";
+"Wanna know how much you have in hand? Be aware with the app EasyBalance 2 for iPhone ;)" = "Wanna know how much you have in hand? Be aware with the app EasyBalance 2 for iPhone ;)";
+"Thanks for sharing EasyBalance 2 tip with your friends!" = "Thanks for sharing EasyBalance 2 tip with your friends!";
+"Parental control enabled on Settings App, blocking purchases on this device." = "Parental control enabled on Settings App, blocking purchases on this device.";
+
+"Unlocking" = "Unlocking";
+"Done." = "Done.";
+"Not allowed" = "Not allowed";
+"Error" = "Error";
+
+

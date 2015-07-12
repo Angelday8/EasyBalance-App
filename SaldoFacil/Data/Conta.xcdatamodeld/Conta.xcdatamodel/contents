@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3396" systemVersion="12F37" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Conta" representedClassName="Conta" syncable="YES">
+        <attribute name="codigo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="data" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="modificada_em" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="nome" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="saldoString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="senha" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="valores" optional="YES" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Valor" inverseName="conta" inverseEntity="Valor" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName="Tag" syncable="YES">
+        <attribute name="nome" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="valor" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Valor" inverseName="tags" inverseEntity="Valor" syncable="YES"/>
+    </entity>
+    <entity name="Valor" representedClassName="Valor" syncable="YES">
+        <attribute name="codigo" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="data" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="receita" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="valor" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="conta" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conta" inverseName="valores" inverseEntity="Conta" syncable="YES"/>
+        <relationship name="tags" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Tag" inverseName="valor" inverseEntity="Tag" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Conta" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Tag" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Valor" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>

@@ -1,0 +1,97 @@
+/*
+ Localizable.strings
+ SaldoFacil
+ 
+ Created by Daniel Bonates on 9/14/13.
+ Copyright (c) 2013 Daniel Bonates. All rights reserved.
+ */
+
+"EasyBalance 2" = "SaldoFácil 2";
+
+"Receipt" = "Receita";
+
+"Receipts" = "Receitas";
+
+"Receipts:" = "Receitas:";
+
+"Expenses" = "Despesas";
+
+"Expenses:" = "Despesas:";
+
+"Balance" = "Saldo";
+
+"Report" = "Relatório";
+
+"Expense" = "Despesa";
+
+"by Daniel Bonates" = "por Daniel Bonates";
+
+"credits" = "creditos";
+
+"Confirm" = "Confirmar";
+
+"Cancel" = "Cancelar";
+
+"account name" = "nome da conta";
+
+"New entry" = "Nova entrada";
+
+"label" = "rotulo";
+
+"Delete this account?" = "Deletar esta conta?";
+
+"All data will be removed. Maybe you wanna send it by email or print before doing this, as a backup for future reference." = "Todos os valores serão excluídos. Você talvez queira enviá-la por email ou imprimir antes de apagá-la.";
+
+"Delete" = "Deletar";
+"Add an account" = "Addicionar conta";
+
+"Add an entry" = "adicionar entrada";
+
+"Print" = "Imprimir";
+
+"Send" = "Enviar";
+
+"Share" = "Indicar";
+
+"About" = "Sobre";
+
+"Options" = "Opções";
+
+"Accounts" = "Contas";
+
+"Default account" = "Conta padrão";
+
+"EasyBalance 2-Report-%@" = "SaldoFácil 2-Relatório-%@";
+
+"Printing" = "Imprimindo";
+
+"It was not possible to print: %@" = "Erro ao tentar imprimir: %@";
+
+"Printed with success." = "Impressão enviada com sucesso.";
+
+"Sending email" = "Enviando email";
+
+"Draft saved." = "Rascunho salvo.";
+
+"Message sent." = "Mensagem enviada.";
+
+"Error sending message." = "Erro ao enviar mensagem.";
+
+"Message not sent." = "Mensagem não enviada.";
+
+"Wanna know how much you have in hand? Be aware with the app EasyBalance 2 for iPhone ;)" = "Você sabe quanto tem no bolso? Fique por dentro com o aplicativo Saldo Fácil para iPhone ;)";
+
+"Thanks for sharing EasyBalance 2 tip with your friends!" = "Obrigado por compartilhar o SaldoFácil 2 com seus amigos!";
+
+
+"Parental control enabled on Settings App, blocking purchases on this device." = "O controle parental foi ativado no aplicativo Ajustes impedindo compras a partir deste dispositivo.";
+
+"Unlocking" = "Ativando";
+
+"Done." = "Feito.";
+
+"Not allowed" = "Não permitido";
+
+"Error" = "Erro";
+
+
