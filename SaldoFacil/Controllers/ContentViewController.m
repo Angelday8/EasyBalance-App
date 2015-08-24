@@ -23,8 +23,6 @@
 #define iPad [self isPad]
 #define IPAD_WIDTH 548.0
 
-#define SETA_UP @"\uf077"
-#define SETA_DOWN @"\uf078"
 
 #define HEIGHT_FOR_TEXTFIELD 33.0
 #define HEIGHT_FOR_SMALL_BUTTON 32.0
@@ -35,6 +33,7 @@
 #define HEIGHT_FOR_IPHONE_KEYBOARD 216.0
 
 #define IS_IPHONE5 (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone && [UIScreen mainScreen].bounds.size.height==568)
+
 
 #import "NovaContaCell.h"
 
@@ -85,6 +84,9 @@ CGRect tableViewFrameSmall;
 CGRect tableViewFrameBig;
 
 
+NSString *SETA_UP = @"\uf077";
+NSString *SETA_DOWN = @"\uf078";
+
 BOOL bottomViewIsOpened;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -112,6 +114,7 @@ BOOL bottomViewIsOpened;
         [self.mm_drawerController openDrawerSide:MMDrawerSideLeft animated:NO completion:nil];
     }
 
+    self.valoresTableView.rowHeight = 70.0;
     
     [self setupRightMenuButton];
     
@@ -207,13 +210,7 @@ BOOL bottomViewIsOpened;
     
     tableViewFrameSmall.size.height -= (bottonViewOpenedHeight-bottonViewClosedHeight);
 
-    
-    
-//    if (iPad) {
-//        CGRect iPadBottomViewFrame = CGRectMake(0, 0, IPAD_WIDTH, bottonViewOpenedHeight);
-//        self.bottomView.frame = iPadBottomViewFrame;
-//    }
-    
+
 
     [self configureBottomView];
     
@@ -221,20 +218,13 @@ BOOL bottomViewIsOpened;
     
     [self.valoresTableView registerClass:[NovaContaCell class] forCellReuseIdentifier:@"NovaContaCell"];
 
-//    self.valoresTableView.hidden = YES;
     
     [self.valoresTableView setSeparatorColor:[UIColor dbAzulLight]];
     
     self.bottomView.backgroundColor = [UIColor dbBranco];
     
-//    
-//    UITableViewController *tableViewController = [[UITableViewController alloc] init];
-//    tableViewController.tableView = self.valoresTableView;
-//    
-//    self.refreshControl = [[UIRefreshControl alloc] init];
-//    [self.refreshControl addTarget:self action:@selector(updateList) forControlEvents:UIControlEventValueChanged];
-//    tableViewController.refreshControl = self.refreshControl;
-//    
+
+
     if (!iPad) [self configureGestureRecognizers];
     
     
@@ -250,16 +240,14 @@ BOOL bottomViewIsOpened;
     self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gestured:)];
     self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
     
-    //    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestured:)];
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestured:)];
     
     [self.bottomView addGestureRecognizer:self.swipeGestureUp];
     [self.bottomView addGestureRecognizer:self.swipeGestureDown];
-    //    [self.bottomView addGestureRecognizer:self.tapGesture];
-    
-//    self.swipeGestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cellSwiped:)];
-//    self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [self.valoresTableView addGestureRecognizer:self.swipeGestureLeft];
+    [self.bottomView addGestureRecognizer:self.tapGesture];
+
 }
+
 
 
 - (void)cellSwiped:(UISwipeGestureRecognizer *)gesture
@@ -359,26 +347,42 @@ BOOL bottomViewIsOpened;
     }
     if (bottomViewIsOpened) {
         
-        [UIView animateWithDuration:TRANSITION_TIME/2
-                         animations:^{
-                             self.bottomView.frame = bottomViewFrameClosed;
-                             self.valoresTableView.frame = tableViewFrameBig;
-                             
-                         } completion:^(BOOL finished) {
-                             bottomViewIsOpened = NO;
-                             [self.openCloseBottomView setIcon:SETA_UP];
-                         }];
+        [UIView animateWithDuration:TRANSITION_TIME*2 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            
+            self.bottomView.frame = bottomViewFrameClosed;
+//            self.valoresTableView.frame = tableViewFrameBig;
+            [self.openCloseBottomView setIcon:SETA_UP];
+            
+            CGRect frame = self.valoresTableView.frame;
+            frame.size.height = frame.size.height + 70;
+            self.valoresTableView.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            bottomViewIsOpened = NO;
+        }];
+        
+        
+
     }
     else {
-        [UIView animateWithDuration:TRANSITION_TIME/2
-                         animations:^{
-                             self.bottomView.frame = bottomViewFrameOpened;
-                             self.valoresTableView.frame = tableViewFrameSmall;
-                             
-                         } completion:^(BOOL finished) {
-                             bottomViewIsOpened = YES;
-                             [self.openCloseBottomView setIcon:SETA_DOWN];
-                         }];
+        
+        [UIView animateWithDuration:TRANSITION_TIME*2 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            
+            self.bottomView.frame = bottomViewFrameOpened;
+//            self.valoresTableView.frame = tableViewFrameSmall;
+            [self.openCloseBottomView setIcon:SETA_DOWN];
+            
+            CGRect frame = self.valoresTableView.frame;
+            frame.size.height = frame.size.height - 70;
+            self.valoresTableView.frame = frame;
+            
+
+        } completion:^(BOOL finished) {
+            bottomViewIsOpened = YES;
+        }];
+        
+        
+
     }
 }
 
@@ -534,21 +538,30 @@ BOOL bottomViewIsOpened;
 
 - (void)updatePorcentagemGeralComPositivos:(float)positivos eNegativos:(float)negativos
 {
-//    DDLogInfo(@"positivos: %f", positivos);
-//    DDLogInfo(@"negativos: %f", negativos);
+    //DDLogInfo(@"positivos: %f", positivos);
+    //DDLogInfo(@"negativos: %f", negativos);
     
-    float total = positivos+negativos;
-//    DDLogInfo(@"total: %f", total);
-    
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setMaximumFractionDigits:1];
-    [formatter setRoundingMode: NSNumberFormatterRoundDown];
-    
-    porcentagemReceita = (positivos/total)*100;
-//    DDLogInfo(@"porcentagemReceita: %ld", lroundf(porcentagemReceita));
-    
-    porcentagemDespesa = (negativos/total)*100;
-//    DDLogInfo(@"porcentagemReceita: %ld", lroundf(porcentagemDespesa));
+    if(negativos >= positivos) {
+        porcentagemReceita = 0;
+        porcentagemDespesa = 100;
+    } else {
+        
+        float total = positivos+negativos;
+    //    DDLogInfo(@"total: %f", total);
+        
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setMaximumFractionDigits:1];
+        [formatter setRoundingMode: NSNumberFormatterRoundDown];
+        
+        porcentagemReceita = (positivos/total)*100;
+        //DDLogInfo(@"porcentagemReceita: %ld", lroundf(porcentagemReceita));
+        
+        porcentagemDespesa = (negativos/total)*100;
+        //DDLogInfo(@"porcentagemReceita: %ld", lroundf(porcentagemDespesa));
+        
+        porcentagemReceita = (positivos - negativos)/positivos*100;
+        porcentagemDespesa = 100 - porcentagemReceita;
+    }
     
     [self.saldoChart reloadData];
 }
@@ -619,14 +632,51 @@ BOOL bottomViewIsOpened;
         cell = [[ValorCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    Valor *valor = [self.valoresArray objectAtIndex:indexPath.row];
-    //    DDLogInfo(@"configurar meu valor: %@", valor.info);
-    [cell configurarValor:valor];
+    
     
     return cell;
 }
 
 # pragma mark contas tableview delegate
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.valoresArray.count < 1) {
+        return;
+    }
+   
+    
+    ValorCell * vcell = (ValorCell *)cell;
+    
+    
+    
+    Valor *valor = [self.valoresArray objectAtIndex:indexPath.row];
+    
+    [vcell configurarValor:valor];
+
+    
+    if (!tableView.isDragging) {
+        vcell.layer.opacity = 0;
+        
+        [UIView animateWithDuration:TRANSITION_TIME*2 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            vcell.layer.opacity = 1;
+        } completion:nil];
+        return;
+    }
+
+    
+    vcell.layer.opacity = 0;
+    vcell.transform = CGAffineTransformMakeScale(0.9, 0.9);
+    
+    [UIView animateWithDuration:TRANSITION_TIME*3 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        vcell.layer.opacity = 1;
+        vcell.transform = CGAffineTransformMakeScale(1,1);
+    } completion:nil];
+
+    
+}
+
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -647,11 +697,6 @@ BOOL bottomViewIsOpened;
     [self showEditarValorForm:vc.valor];
 }
 
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 70.0;
-}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -864,7 +909,7 @@ BOOL bottomViewIsOpened;
     // atualizada conta.modificada_em
     valor.conta.modificada_em = valor.data;
     
-    //    DDLogInfo (@"SALVANDO: : %@", valor.info);
+        DDLogInfo (@"SALVANDO: : %@", valor.info);
     
     [localContext MR_saveToPersistentStoreAndWait];
     
@@ -992,7 +1037,6 @@ BOOL bottomViewIsOpened;
 
 - (void)gestured:(UIGestureRecognizer *)gesture
 {
-    
     [self toggleBottomView:self];
 }
 

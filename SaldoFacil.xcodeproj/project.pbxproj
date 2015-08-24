@@ -82,7 +82,6 @@
 		37B5CF0917E0A64B00509BA0 /* Carteiro.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B5CF0817E0A64B00509BA0 /* Carteiro.m */; };
 		37DB8A0717D1AE52005FCA5A /* StatusbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37DB8A0617D1AE52005FCA5A /* StatusbarView.m */; };
 		37E0BFBA17CBA59200290706 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E0BFB917CBA59200290706 /* ContentViewController.m */; };
-		37EAF14117E9EFAF007A0516 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37EAF14017E9EFAF007A0516 /* StoreKit.framework */; };
 		37EBD27217E7991B0029FE2E /* share_picture_v2_small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 37EBD27417E7991B0029FE2E /* share_picture_v2_small.jpg */; };
 		37EEDA9917D2EA5200CA64E7 /* UIButton+DBAwesomeIconized.m in Sources */ = {isa = PBXBuildFile; fileRef = 37EEDA9817D2EA5200CA64E7 /* UIButton+DBAwesomeIconized.m */; };
 		37F6DE9317E4F11E00CB8DDA /* ICSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F6DE9217E4F11E00CB8DDA /* ICSyncManager.m */; };
@@ -200,7 +199,6 @@
 		37E0BFB817CBA59200290706 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
 		37E0BFB917CBA59200290706 /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 		37E62C0717DE83D700557853 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		37EAF14017E9EFAF007A0516 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		37EBD27317E7991B0029FE2E /* en */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = en; path = en.lproj/share_picture_v2_small.jpg; sourceTree = "<group>"; };
 		37EBD27517E799210029FE2E /* pt */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = pt; path = pt.lproj/share_picture_v2_small.jpg; sourceTree = "<group>"; };
 		37EEDA9717D2EA5200CA64E7 /* UIButton+DBAwesomeIconized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+DBAwesomeIconized.h"; sourceTree = "<group>"; };
@@ -218,7 +216,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37EAF14117E9EFAF007A0516 /* StoreKit.framework in Frameworks */,
 				37FDA9F617E156AB009D85DC /* Accounts.framework in Frameworks */,
 				377E606317E0FEE700B0EBA8 /* Social.framework in Frameworks */,
 				37AA377D17E0C96400A1D856 /* MessageUI.framework in Frameworks */,
@@ -369,7 +366,6 @@
 		3753EC6417CAC41B00859546 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				37EAF14017E9EFAF007A0516 /* StoreKit.framework */,
 				37FDA9F517E156AB009D85DC /* Accounts.framework */,
 				377E606217E0FEE700B0EBA8 /* Social.framework */,
 				37AA377C17E0C96400A1D856 /* MessageUI.framework */,
@@ -603,6 +599,11 @@
 				TargetAttributes = {
 					3753EC6117CAC41B00859546 = {
 						DevelopmentTeam = 56N7W5W933;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -854,8 +855,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CB2EB505783C1770A5CC54E8 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Bonates (8HHXR9YSNU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Bonates (8HHXR9YSNU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
@@ -863,9 +864,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SaldoFacil/SaldoFacil-Prefix.pch";
 				INFOPLIST_FILE = "SaldoFacil/SaldoFacil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "87D5BBB5-86B3-4EB3-A6BD-47733221E3ED";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -875,8 +876,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5CA1D1D8A59AEC858AE95B86 /* Pods.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Daniel Bonates";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Daniel Bonates";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
@@ -884,9 +885,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SaldoFacil/SaldoFacil-Prefix.pch";
 				INFOPLIST_FILE = "SaldoFacil/SaldoFacil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F50D7CEF-D795-479C-90DF-B82B9EF0646B";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

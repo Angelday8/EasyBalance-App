@@ -23,11 +23,17 @@
 #define HEIGHT_FOR_IPAD_KEYBOARD 264.0
 #define HEIGHT_FOR_IPHONE_KEYBOARD 216.0
 
+
+
 #define IS_IPHONE5 (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone && [UIScreen mainScreen].bounds.size.height==568)
 
 #define iPad [self isPad]
 
 @interface NovoValorViewController ()
+
+
+@property (assign, nonatomic) CGRect keyboardEndFrame;
+
 @property (strong, nonatomic) UITextField *infoInput;
 @property (strong, nonatomic) UITextField *valorInput;
 @property (strong, nonatomic) UISegmentedControl *inputMode;
@@ -69,93 +75,43 @@ BOOL loaded;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    
+    
 }
-
 
 
 - (void)keyboardWasShown:(NSNotification*)aNotification
 {
-    if (loaded) {
-        return;
-    }
+   
+    NSDictionary *userInfo = aNotification.userInfo;
     
-    loaded = YES;
-    return;
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&_keyboardEndFrame];
     
-    float statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-        statusBarHeight = 0;
-    }
+    float top = self.view.frame.origin.y;
+    CGRect viewFrame = self.parent.view.frame;
     
-    NSDictionary* info = [aNotification userInfo];
-    
-    CGRect kbFrame = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGRect selfFrame = self.view.frame;
-    
-//    DDLogInfo(@"KeyboardSize: %@", NSStringFromCGRect(kbFrame));
-    
-    // Keyboard sizes
-    
-    // iPhone
-    // 3.5 iOS 7    = {{0, 480}, {320, 216}}
-    // 3.5 iOS 6.1  = {{0, 480}, {320, 216}}
-    // 4 iOS 7      = {{0, 568}, {320, 216}}
-    // 4 iOS 6.1    = {{0, 568}, {320, 216}}
-    
-    // iPad
-    // NR iOS 7     = {{0, 1024}, {768, 264}}
-    // NR iOS 6.1   = {{0, 1024}, {768, 264}}
-    // R iOS 7      = {{0, 1024}, {768, 264}}
-    // R iOS 6.1    = {{0, 1024}, {768, 264}}
-    
-    // ou seja, size = iPhone: {320, 216}, iPad: {768, 264}
+    viewFrame.size.height -= _keyboardEndFrame.size.height;
+    viewFrame.origin.y = top;
+    self.view.frame = viewFrame;
+
+
     
     
-    float masterHeight = [[UIApplication sharedApplication] keyWindow].frame.size.height;
-    float heightQueSobra = masterHeight - kbFrame.size.height - statusBarHeight -selfFrame.origin.y;
+    CGRect confirmarBtnFrame = CGRectMake(buttonHeight, self.view.frame.size.height-buttonHeight-top, self.view.frame.size.width-buttonHeight, buttonHeight);
     
-    if (!iPad) { selfFrame.size.height = heightQueSobra; }
+    CGRect cancelarBtnFrame = CGRectMake(0, self.view.frame.size.height-buttonHeight-top, buttonHeight, buttonHeight);
     
     
-    // final frame
-    CGRect confirmarBtnFrame = CGRectMake(buttonHeight, selfFrame.size.height-buttonHeight, self.view.frame.size.width-buttonHeight, buttonHeight);
-    CGRect cancelarBtnFrame = CGRectMake(0, selfFrame.size.height-buttonHeight, buttonHeight, buttonHeight);
-    
-    // offscreen
-    self.cancelarButton.frame = CGRectMake(-buttonHeight, selfFrame.size.height-buttonHeight, buttonHeight, buttonHeight);
-    self.confirmarButton.frame = CGRectMake(selfFrame.size.width, selfFrame.size.height-buttonHeight, self.view.frame.size.width-buttonHeight, buttonHeight);
-    
-    CGRect valorFrame = CGRectMake(MARGEM, (self.view.frame.size.height - (buttonHeight/2) - buttonHeight)/2-17.0, self.view.frame.size.width-(MARGEM*2), 34.0);
-    
-    /*
-    CGRect valorFrame = selfFrame;
-    valorFrame.size.height = 34.0; //system default
-    valorFrame.origin.y = (selfFrame.size.height - buttonHeight - 68.0)/2+(buttonHeight/2);
-    valorFrame.origin.x += MARGEM;
-    valorFrame.size.width -= (MARGEM*2);
-    */
-    
-    CGRect infoFrame = valorFrame;
-    infoFrame.origin.y += 34.0;
-    
-    self.cancelarButton.hidden = NO;
-    self.confirmarButton.hidden = NO;
-    
-    self.valorInput.hidden = NO;
-    self.infoInput.hidden = NO;
-    
-    [UIView animateWithDuration:TRANSITION_TIME/2
-                     animations:^{
-                         self.view.frame = selfFrame;
-                         self.confirmarButton.frame = confirmarBtnFrame;
-                         self.cancelarButton.frame = cancelarBtnFrame;
-                         self.valorInput.frame = valorFrame;
-                         self.infoInput.frame = infoFrame;
-                     }];
-    
-    CGRect full = self.view.frame;
-    full.size.height += kbFrame.size.height;
-    self.view.frame = full;
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.4 options:0 animations:^{
+
+        self.confirmarButton.frame = confirmarBtnFrame;
+        self.cancelarButton.frame = cancelarBtnFrame;
+
+
+    } completion:nil];
+   
 }
 
 - (void)setupFormatter
@@ -193,10 +149,11 @@ BOOL loaded;
 
 - (void)buildControls
 {
-    // confirmar
-    CGRect confirmarBtnFrame = CGRectMake(buttonHeight, self.view.frame.size.height-buttonHeight, self.view.frame.size.width-buttonHeight, buttonHeight);
     
-//    DDLogInfo(@"self.view.frame.size.height: %f", self.view.frame.size.height);
+    
+    // confirmar
+
+    CGRect confirmarBtnFrame = CGRectMake(buttonHeight, self.view.frame.size.height, self.view.frame.size.width-buttonHeight, buttonHeight);
     
     self.confirmarButton = [UIButton buttonWithLabel:@{@"texto": NSLocalizedString(@"Confirm", @""), @"icone": @"\uf00c"}
                                            withFrame:confirmarBtnFrame
@@ -206,12 +163,15 @@ BOOL loaded;
                                             alinhado:NO
                                         iconFontSize:0];
     self.confirmarButton.hidden = NO;
-    
-    
     [self.view addSubview:self.confirmarButton];
     
+    
+    
     // cancelar
-    CGRect cancelarBtnFrame = CGRectMake(0, self.view.frame.size.height-buttonHeight, buttonHeight, buttonHeight);
+
+    CGRect cancelarBtnFrame = CGRectMake(0, self.view.frame.size.height, buttonHeight, buttonHeight);
+    //CGRect cancelarBtnFrame = CGRectZero;
+    
     
     self.cancelarButton = [UIButton buttonWithLabel:@{@"texto": @"", @"icone": @"\uf057"}
                                           withFrame:cancelarBtnFrame
@@ -223,6 +183,7 @@ BOOL loaded;
     self.cancelarButton.hidden = NO;
     [self.cancelarButton addTarget:self action:@selector(closeMe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cancelarButton];
+    
     
     
     // despesa
@@ -259,8 +220,6 @@ BOOL loaded;
     
     // valor field
     
-//    float textHeightSpace = self.view.frame.size.height - HEIGHT_FOR_SMALL_BUTTON*2 - HEIGHT_FOR_BUTTON;
-//    DDLogInfo(@"textHeightSpace: %f", textHeightSpace);
     
     CGRect textFieldFrame = self.view.frame;
     textFieldFrame.origin.x += MARGEM;
@@ -424,6 +383,8 @@ BOOL loaded;
 {
     [self.valor.receita boolValue] ? [self definirReceita:self] : [self definirDespesa:self];
     
+    NSLog(@"valor para formatar: %@", self.valor.valor);
+    
     self.valorInput.text = [self.formatter stringFromNumber:self.valor.valor];
     
     self.infoInput.text = self.valor.info;
@@ -510,10 +471,10 @@ BOOL loaded;
     [btn configureButtonWithBackgroundColor:[UIColor dbMarinho] andLabelColor:[UIColor dbBranco] enabled:NO];
     
 }
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-         NSString *replaced = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+        NSString *replaced = [textField.text stringByReplacingCharactersInRange:range withString:string];
         NSDecimalNumber *amount = (NSDecimalNumber*) [self.formatter numberFromString:replaced];
         if (amount == nil)
             {
@@ -548,7 +509,6 @@ BOOL loaded;
         return NO;
 
 }
-
  
  
  @end

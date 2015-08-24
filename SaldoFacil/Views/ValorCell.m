@@ -123,20 +123,15 @@
     {
         self.valor = novoValor;
     }
-    
-    
-//    DDLogInfo (@"configurar meu valor: %@", novoValor.valor);
+
     self.infoLabel.text = novoValor.info;
-//    NSString *currencySymbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
-//    self.valorLabel.text = [NSString stringWithFormat:@"%@ %@", currencySymbol, novoValor.valorString];
     self.valorLabel.text = [NSString currencyStringFromNumber:novoValor.valor];
     self.dateLabel.text = [NSDate shortStyle:novoValor.data];
     self.sinalLabel.textColor = [novoValor.receita boolValue] ? [UIColor dbVerde] : [UIColor dbVermelho];;
     self.sinalLabel.text = [novoValor.receita boolValue] ? STR_PLUS : STR_MINUS;
     
+        
     return;
-    
-    
     
     
     if (![self.valor isEqual:novoValor]) {

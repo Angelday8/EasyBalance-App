@@ -10,6 +10,9 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
+extern NSString * const PREFS_MY_CONSTANT;
+
+
 @property (strong, nonatomic) UIWindow *window;
 
 @end

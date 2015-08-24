@@ -23,8 +23,12 @@ static char buttonIconKey;
 static char normalBackgroundViewKey;
 
 
+
+
 @implementation UIButton (DBAwesomeIconized)
 
+NSString *SETA_UP_STR = @"\uf077";
+NSString *SETA_DOWN_STR = @"\uf078";
 
 #pragma mark - buttonbuild
 
@@ -39,7 +43,7 @@ static char normalBackgroundViewKey;
     float IconFontSizeToUse = (iconFontSize != 0) ? iconFontSize : defaultIconFontSize;
     
     UIFont *iconFont = [UIFont fontWithName:@"fontawesome" size:IconFontSizeToUse];
-    UIFont *labelFont = DEFAULT_LABEL_FONT;
+//    UIFont *labelFont = DEFAULT_LABEL_FONT;
     
     // default background color
     if (bgColor) {
@@ -58,15 +62,21 @@ static char normalBackgroundViewKey;
     // icon and Label present
     if (!isEmpty([labelInfo objectForKey:@"icone"]) && !isEmpty([labelInfo objectForKey:@"texto"]))
     {
+        
+        NSDictionary *iconFontAttributes = @{NSFontAttributeName: iconFont};
+        
     
         NSString *iconText = [labelInfo objectForKey:@"icone"];
-        CGSize iconLabelSize = [iconText sizeWithFont:iconFont];
+        CGSize iconLabelSize = [iconText sizeWithAttributes:iconFontAttributes];
+//        CGSize iconLabelSize = [iconText sizeWithFont:iconFont];
         CGRect iconLabelFrame = CGRectMake(0, 0, iconLabelSize.width, frame.size.height);
     
     
     
+        NSDictionary *labelFontAttributes = @{NSFontAttributeName: DEFAULT_LABEL_FONT};
         NSString *labelText = [labelInfo objectForKey:@"texto"];
-        CGSize labelSize = [labelText sizeWithFont:labelFont];
+        CGSize labelSize = [labelText sizeWithAttributes:labelFontAttributes];
+//        CGSize labelSize = [labelText sizeWithFont:labelFont];
         CGRect textLabelFrame = CGRectMake(0, 0, labelSize.width, frame.size.height);
     
     
@@ -218,7 +228,30 @@ static char normalBackgroundViewKey;
 
 - (void)setIcon:(NSString *)iconString
 {
-    self.iconLabel.text = iconString;
+    //self.iconLabel.text = iconString;
+    CGAffineTransform rotation;
+    
+    if ([iconString isEqualToString:SETA_UP_STR]) {
+        rotation = CGAffineTransformMakeRotation(0);
+    } else {
+        rotation = CGAffineTransformMakeRotation(3.14);
+    }
+    
+    [UIView animateWithDuration:TRANSITION_TIME delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.iconLabel.transform = rotation;
+    } completion:^(BOOL finished) {
+        
+        CGFloat duration = 1;
+        
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
+        animation.values = @[@0, @0.18, @-0.18, @0.18, @0];
+        animation.keyTimes = @[@0, @0.2, @0.4, @0.6, @0.8, @1];
+        animation.duration = duration;
+        animation.additive = true;
+        
+        [self.iconLabel.layer addAnimation:animation forKey: @"wooble"];
+
+    }];
 }
 
 - (void)setTitle:(NSString *)titleString

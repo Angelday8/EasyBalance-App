@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 @class Conta;
 #import "Carteiro.h"
-#import <StoreKit/StoreKit.h>
+
 
 @class DBViewContainer;
 
-@interface MasterViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UIPrintInteractionControllerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>
+
+
+
+@interface MasterViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UIPrintInteractionControllerDelegate>
 
 @property (nonatomic, strong) DBViewContainer *viewContainer;
 

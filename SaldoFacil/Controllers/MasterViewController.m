@@ -31,6 +31,7 @@
 static NSString *serviceName = @"com.bonates.saldofacil";
 static NSString *serviceKey = @"contas.enabled";
 
+
 @interface MasterViewController ()
 
 @property (nonatomic, strong) UIButton *opcoesButton;
@@ -570,21 +571,20 @@ NSMutableArray *toolsButtons;
         for (UIButton *b in toolsButtons) {
             [b setEnabled:YES];
         }
-        
-        [UIView animateWithDuration:TRANSITION_TIME animations:^{
-            
+        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.contasButton.frame = contasBtnFrameClosed;
             self.contasView.frame = contasViewFrameClosed;
         } completion:^(BOOL finished) {
             self.contasView.hidden = YES;
         }];
+
     } else
-        {
+    {
         
         for (UIButton *b in toolsButtons) {
             [b setEnabled:NO];
         }
-        }
+    }
     
 }
 - (void)disableButton:(UIButton *)btn
@@ -597,11 +597,13 @@ NSMutableArray *toolsButtons;
 
         
         self.contasView.hidden = NO;
-        [UIView animateWithDuration: TRANSITION_TIME animations:^{
-            
+        
+        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.contasButton.frame = contasBtnFrameOpened;
             self.contasView.frame = contasViewFrameOpened;
-        }];
+        } completion: nil];
+        
+
     }
 }
 
@@ -612,7 +614,7 @@ NSMutableArray *toolsButtons;
 {
 
     float novaContaFormWidth = iPad ? 640 : [[UIApplication sharedApplication] keyWindow].frame.size.width;
-    float novaContaFormWHeight = iPad ? 580 : [[UIApplication sharedApplication] keyWindow].frame.size.height/2;
+    float novaContaFormWHeight = iPad ? 580 : [[UIApplication sharedApplication] keyWindow].frame.size.height;
     
     NovaContaViewController *vc = [[NovaContaViewController alloc] init];
     vc.view.frame = CGRectMake(0, 0, novaContaFormWidth, novaContaFormWHeight);
@@ -1010,24 +1012,6 @@ NSMutableArray *toolsButtons;
 #pragma mark - In App Purchase procedures
 
 
-- (void)showBuyResource:(id)sender
-{
-    DDLogInfo(@"showBuyResource");
-    
-    if([SKPaymentQueue canMakePayments])
-    {
-        // proceder com o pagamento
-        SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:@"com.bonates.saldofacil.contas"]];
-        
-        request.delegate = self;
-        [request start];
-    }
-    else
-    {
-        [self alert:NSLocalizedString(@"Not allowed", @"") msg:NSLocalizedString(@"Parental control enabled on Settings App, blocking purchases on this device.", @"")];
-    }
-}
-
 - (BOOL)contasEnabled
 {
     NSString *contasEnabledString = [SSKeychain passwordForService:serviceName account:serviceKey];
@@ -1040,147 +1024,7 @@ NSMutableArray *toolsButtons;
 }
 
 
-#pragma mark - In App Purchase delegates
 
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
-{
-    DDLogInfo(@"productsRequest: %@", response);
-    
-    SKProduct *validProduct = nil;
-    
-    int count = response.products.count;
-    
-    
-    if (count > 0) {
-        
-        validProduct = [response.products objectAtIndex:0];
-        
-        DDLogInfo(@"response.products: %@", validProduct.productIdentifier);
-        
-        SKPayment *payment = [SKPayment paymentWithProduct:validProduct];
-        
-        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-        
-        [[SKPaymentQueue defaultQueue] addPayment:payment];
-    }
-}
-
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
-{
-    /*
-    SKPaymentTransactionStatePurchasing - indicates still processing the purchasing - display a wait view.
-    SKPaymentTransactionStatePurchased - indicates purchase completed - unlock features by code
-    SKPaymentTransactionStateRestored - purchase restored from an interrupt (phone call etc)
-    SKPaymentTransactionStateFailed - purchase failed - show alert
-     */
-    
-    for (SKPaymentTransaction *transaction in transactions) {
-        
-        DDLogInfo(@"ctransation Error: %d", transaction.transactionState);
-        
-        switch (transaction.transactionState) {
-                
-                
-                case SKPaymentTransactionStatePurchasing:
-        
-                DDLogInfo(@"processando...");
-                
-                break;
-                
-                
-                
-                
-                case SKPaymentTransactionStatePurchased:
-                
-                [self completeTransaction:transaction];
-                
-                break;
-                
-                
-                
-                
-                case SKPaymentTransactionStateRestored:
-                
-                [self restoreTransaction:transaction];
-                
-                [self updateList];
-                
-                break;
-                
-                
-                
-                
-                case SKPaymentTransactionStateFailed:
-                
-                [self failedTransaction:transaction];
-                
-                break;
-                
-                
-                
-                
-            default:
-                break;
-        }
-        
-        
-        
-    }
-}
-
-
-- (void) completeTransaction:(SKPaymentTransaction *)transaction
-{
-    DDLogInfo(@"compra efetuada!");
-
-    [self recordTransaction:transaction isRestoring:NO];
-    [self alert:NSLocalizedString(@"Unlocking", @"") msg:NSLocalizedString(@"Done.", @"")];
-    [self updateList];
-    
-    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
-}
-
-
-- (void) restoreTransaction:(SKPaymentTransaction *)transaction
-{
-    DDLogInfo(@"compra restaurada!");
-    [self recordTransaction:transaction isRestoring:YES];
-    
-    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
-}
-
-
-- (void) failedTransaction: (SKPaymentTransaction *)transaction
-{
-    if (transaction.error.code != SKErrorPaymentCancelled) {
-        [self alert:NSLocalizedString(@"Error", @"") msg:[NSString stringWithFormat:NSLocalizedString(@"%@", @""), transaction.error.description]];
-    }
-    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
-}
-
-
-
-- (void)recordTransaction:(SKPaymentTransaction *)transaction isRestoring:(BOOL)isRestoring
-{
-    if (isRestoring) {
-        [SSKeychain setPassword:transaction.originalTransaction.payment.productIdentifier forService:serviceName account:serviceKey];
-    }
-    else {
-        [SSKeychain setPassword:transaction.transactionIdentifier forService:serviceName account:serviceKey];
-    }
-    
-}
--(void)requestDidFinish:(SKRequest *)request
-{
-    DDLogInfo(@"requestDidFinish");
-}
-
--(void)request:(SKRequest *)request didFailWithError:(NSError *)error
-{
-    DDLogInfo(@"request didFailWithError: %@", error.description);
-    
-     [self alert:NSLocalizedString(@"Error", @"") msg:[NSString stringWithFormat:NSLocalizedString(@"%@", @""), [error localizedDescription]]];
-}
 
 - (void)didReceiveMemoryWarning
 {

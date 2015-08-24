@@ -16,7 +16,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif
 
 
-#define TRANSITION_TIME .3
+#define TRANSITION_TIME 0.4
 #define LATERAL_MENU_WIDTH_IPHONE 170.0
 #define LATERAL_MENU_WIDTH_IPAD 220.0
 #define LIST_WIDTH_IPAD 548.0
